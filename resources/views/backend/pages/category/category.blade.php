@@ -9,7 +9,7 @@
             A simple warning alert—check it out!
           </div> --}}
         <div class="page-title-box">
-            <h4 class="page-title">Salary</h4>
+            <h4 class="page-title">Category</h4>
             <div class="page-title-right">
                 <ol class="breadcrumb p-0 m-0">
                     <li class="breadcrumb-item"><a href="#">Moltran</a></li>
@@ -29,8 +29,8 @@
         <div class="card">
             <div class="card-header">
                 <div class="header-content d-flex justify-content-between">
-                    <h3 class="card-title">Salary Table</h3>
-                    <button class="btn btn-primary btn-sm" id="add_sal"><i class="fa fa-user-plus"></i></button>
+                    <h3 class="card-title">Category Table</h3>
+                    <button class="btn btn-primary btn-sm" id="add_cat"><i class="fa fa-user-plus"></i></button>
 
                 </div>
                 <span id="notifaction"></span>
@@ -39,14 +39,12 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="table-responsive">
-                            <table class="table mb-0" id="sal_table">
+                            <table class="table mb-0 text-center" id="cat_table">
                                 <thead>
                                     <tr>
                                         {{-- <th>Id</th> --}}
-                                        <th>Emp Name</th>
-                                        <th>MOnth</th>
-                                        <th>Status</th>
-                                        <th>Adv salary</th>
+                                        <th>Id</th>
+                                        <th>Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -54,7 +52,7 @@
                                 </tbody>
                             </table>
 
-                            @include('backend.pages.salary.sal_modal')
+                            @include('backend.pages.category.cat_modal')
                         </div>
                     </div>
                 </div>
@@ -69,11 +67,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
  <script>
      $(document).ready(function(){
-      $('#warning').css({
-          'visibility': 'hidden',
-          'height': '0',
-          'width': '0',
-      })
+
         $.ajaxSetup({
          headers: {
              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -81,28 +75,26 @@
        });
 
 
-       var table = $('#sal_table').DataTable({
+       var table = $('#cat_table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ url('salary') }}",
+        ajax: "{{ url('/category') }}",
         columns: [
-            {data: 'emp_name', name: 'emp_name'},
-             {data: 'month', name: 'month'},
-             {data: 'status', name: 'status'},
-             {data: 'adv_salary', name: 'adv_salary'},
+            {data: 'id', name: 'id'},
+             {data: 'cat_name', name: 'cat_name'},
              {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
 
-      $('#add_sal').click(function(){
-         $('#sal_modal').modal('show');
-         $('#sal_modal_title').html('Add Salary');
+      $('#add_cat').click(function(){
+         $('#cat_modal').modal('show');
+         $('#cat_modal_title').html('Add Category');
          $('#save_btn').html('Save');
 
       });
 
         // Save
-        $('#sal_form').submit(function(e){
+        $('#cat_form').submit(function(e){
             e.preventDefault();
 
             // saving
@@ -111,65 +103,54 @@
             var formData = new FormData(this);
             $.ajax({
                 data: formData,
-                url: "{{url('/salary')}}",
+                url: "{{url('/category')}}",
                 type: "POST",
                 cache:false,
                 contentType: false,
                 processData: false,
                 success: function(data){
-                      if(data.warning){
-                        toastr.warning(data.warning);
-                        $('#sal_form').trigger("reset");
-                        $('#sal_modal').modal('hide');
+                      if(data.success){
+                        toastr.success(data.success);
+                        $('#cat_form').trigger("reset");
+                        $('#cat_modal').modal('hide');
                         table.draw();
                       } else{
-                        toastr.success(data.success);
+                        toastr.error(data.error);
                         $('#sal_form').trigger("reset");
                         $('#sal_modal').modal('hide');
                         table.draw();
                       }
-
-
                 },
-
             });
         }
 
         //  Update
         if($('#save_btn').html() == 'Update'){
             $('#save_btn').html('Sending..');
-            var id = $('#sal_id').val();
+            var id = $('#cat_id').val();
             // alert(id);
             var formData = new FormData(this);
             $.ajax({
                 data: formData,
-                url: "{{ url('/sal_update') }}"+ '/'+ id ,
+                url: "{{ url('/cat_update') }}"+ '/'+ id ,
                 type: "POST",
                 cache:false,
                 contentType: false,
                 processData: false,
                 success: function(data){
 
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                        });
+                    if(data.success){
+                        toastr.success(data.success);
+                        $('#cat_form').trigger("reset");
+                        $('#cat_modal').modal('hide');
+                        table.draw();
+                      } else{
+                        toastr.error(data.error);
+                        $('#sal_form').trigger("reset");
+                        $('#sal_modal').modal('hide');
+                        table.draw();
+                      }
 
-                        Toast.fire({
-                        icon: 'success',
-                        title: 'Success'
-                        });
-                    $('#sal_form').trigger("reset");
-                    $('#sal_modal').modal('hide');
-                    // $('#view_img').attr('src', ' ');
-                    table.draw();
                 },
 
             });
@@ -177,27 +158,36 @@
     });
 
         // Edit
-        $('body').on('click', '.editSal', function(){
+        $('body').on('click', '.editCat', function(){
             var id = $(this).data('id');
             $.ajax({
-                url:"{{url('/salary')}}"+ '/' + id+ "/edit",
+                url:"{{url('/category')}}"+ '/' + id+ "/edit",
                 success: function(data){
-                    $('#sal_modal').modal('show');
-                    $('#sal_id').val(data.id);
-                    $('#adv_sal').val(data.adv_salary);
+                    $('#cat_modal').modal('show');
+                    $('#cat_id').val(data.id);
+                    $('#cat_name').val(data.cat_name);
                     $('#save_btn').html('Update');
                 }
             });
         });
 
         // Delete
-        $('body').on('click', '.deleteSal', function(){
+        $('body').on('click', '.deleteCat', function(){
             var id = $(this).data('id');
            $.ajax({
-              url: "{{url('/salary')}}"+"/"+ id,
+              url: "{{url('/category')}}"+"/"+ id,
               type: "DELETE",
               success: function(data){
-                table.draw();
+                if(data.success){
+                        toastr.success(data.success);
+
+                        table.draw();
+                      } else{
+                        toastr.error(data.error);
+
+                        table.draw();
+                      }
+
               }
            });
         });

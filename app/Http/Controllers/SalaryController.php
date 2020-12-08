@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\DB;
-
+use Brian2694\Toastr\Facades\Toastr;
 class SalaryController extends Controller
 {
     /**
@@ -63,14 +63,24 @@ class SalaryController extends Controller
      */
     public function store(Request $request)
     {
-        $salary = Salary::insert([
-            'emp_id' => $request->emp_id,
-            'month' => $request->month,
-            'adv_salary' => $request->adv_sal,
-            'created_at' => Carbon::now(),
-        ]);
+        if(Salary::where('emp_id', $request->emp_id)->where('month', $request->month)->exists()){
+            return response()->json([
+                'warning' => 'salary exists',
+                '200'
+            ]);
+        } else{
+            $salary = Salary::insert([
+                'emp_id' => $request->emp_id,
+                'month' => $request->month,
+                'adv_salary' => $request->adv_sal,
+                'created_at' => Carbon::now(),
+            ]);
 
-        return response()->json($salary);
+            return response()->json([
+                'success' => 'Salary saved',
+            ]);
+        }
+
     }
 
     /**
@@ -92,7 +102,7 @@ class SalaryController extends Controller
      */
     public function edit(Salary $salary)
     {
-        //
+        return response()->json($salary);
     }
 
     /**
@@ -102,9 +112,16 @@ class SalaryController extends Controller
      * @param  \App\Salary  $salary
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Salary $salary)
+    public function update(Request $request, $id)
     {
-        //
+        Salary::where('id', $id)->update([
+            'emp_id' => $request->emp_id,
+            'month' => $request->month,
+            'adv_salary' => $request->adv_sal,
+            'updated_at' => Carbon::now(),
+        ]);
+
+        return response()->json('success', 200);
     }
 
     /**
@@ -115,6 +132,7 @@ class SalaryController extends Controller
      */
     public function destroy(Salary $salary)
     {
-        //
+        $salary->delete();
+        return response()->json('success', 200);
     }
 }

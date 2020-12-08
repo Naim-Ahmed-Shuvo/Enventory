@@ -43,3 +43,11 @@ Route::post('sup_update/{id}', 'SupplierController@update');
 
 // Salary
 Route::resource('salary', 'SalaryController');
+Route::post('sal_update/{id}', 'SalaryController@update');
+
+// Category
+Route::resource('category', 'CategoryController');
+Route::post('cat_update/{id}', 'CategoryController@update');
+
+// Product
+Route::resource('product', 'ProductController');

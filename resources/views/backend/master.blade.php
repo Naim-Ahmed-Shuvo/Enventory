@@ -18,6 +18,10 @@
          <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
          <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
          {{-- Data Table ./ --}}
+
+         {{-- Toastr --}}
+         <link rel="stylesheet" href="{{url('/')}}/css/toastr.min.css">
+         {{-- Toastr ./ --}}
         <!-- Custom box css -->
         <link href="{{url('/')}}/backend/assets/libs/custombox/custombox.min.css" rel="stylesheet">
 
@@ -307,6 +311,18 @@
                                         <span> Salary</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{url('/category')}}" class="waves-effect">
+                                        <i class=" mdi mdi-calendar"></i>
+                                        <span> Category</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{url('/product')}}" class="waves-effect">
+                                        <i class=" mdi mdi-calendar"></i>
+                                        <span> Product</span>
+                                    </a>
+                                </li>
 
 
                             </ul>
@@ -412,9 +428,9 @@
         <!-- Right bar overlay-->
         <div class="rightbar-overlay"></div>
 
-        <a href="javascript:void(0);" class="right-bar-toggle demos-show-btn">
+        {{-- <a href="javascript:void(0);" class="right-bar-toggle demos-show-btn">
             <i class="mdi mdi-settings-outline mdi-spin"></i> &nbsp;Choose Demos
-        </a>
+        </a> --}}
 
         <!-- Modal -->
         <div id="custom-modal" class="modal-demo">
@@ -439,6 +455,11 @@
 
         <!-- App js -->
         <script src="{{url('/')}}/backend/assets/js/app.min.js"></script>
+
+        {{-- Toastr  --}}
+        <script src="{{url('/')}}/js/toastr.min.js"></script>
+        {!! Toastr::message() !!}
+        {{-- Toastr  ./ --}}
 
         @stack('js')
 
