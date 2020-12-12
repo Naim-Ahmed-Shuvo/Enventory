@@ -7,7 +7,7 @@
 <head>
         <meta charset="utf-8" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Modals | Moltran - Responsive Bootstrap 4 Admin Dashboard</title>
+        <title>@yield('title')</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Responsive bootstrap 4 admin template" name="description" />
         <meta content="Coderthemes" name="author" />
@@ -321,6 +321,12 @@
                                     <a href="{{url('/product')}}" class="waves-effect">
                                         <i class=" mdi mdi-calendar"></i>
                                         <span> Product</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{url('/expense')}}" class="waves-effect">
+                                        <i class=" mdi mdi-calendar"></i>
+                                        <span> Expense</span>
                                     </a>
                                 </li>
 

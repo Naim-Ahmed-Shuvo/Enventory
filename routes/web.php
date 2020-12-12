@@ -51,3 +51,9 @@ Route::post('cat_update/{id}', 'CategoryController@update');
 
 // Product
 Route::resource('product', 'ProductController');
+Route::post('product_update/{id}', 'ProductController@update');
+
+// Expense --------------------------------------------------------------------------------------------------------------------
+Route::resource('expense', 'ExpenseController');
+Route::post('expense_update/{id}', 'ExpenseController@update');
+Route::get('today_expense', 'ExpenseController@today_expense');

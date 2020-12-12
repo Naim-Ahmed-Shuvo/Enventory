@@ -39,19 +39,12 @@
                             <table class="table mb-0" id="prd_table">
                                 <thead>
                                     <tr>
-                                        {{-- <th>Id</th> --}}
-                                        <th>id</th>
-                                        <th>category</th>
-                                        <th>product name</th>
-                                        <th>Sup id</th>
-                                        <th>p code</th>
-                                        <th>p garage</th>
-                                        <th>p route</th>
-                                        <th>p image</th>
-                                        <th>buy date</th>
-                                        <th>expire date</th>
-                                        <th>selling price</th>
-                                        <th>buying price</th>
+                                       <th>Name</th>
+                                       <th>Code</th>
+                                       <th>Selling Price</th>
+                                       <th>Image</th>
+                                       <th>Garage</th>
+                                       <th>Route</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -87,28 +80,18 @@
         serverSide: true,
         ajax: "{{ url('/product') }}",
         columns: [
-            {data: 'id', name: 'id'},
-             {data: 'cat_name', name: 'cat_name'},
-             {data : 'p_name', name: 'p_name'},
-             {
-                 data: 'sup_id',
-                 name: 'sup_id',
-             },
-             {
-                 data: 'p_code',
-                 name: 'p_code',
+           {data: 'p_name', name: 'p_name'},
+           {data: 'p_code', name: 'p_code'},
+             {data: 'selling_price', name: 'selling_price'},
+
+             {data: 'p_image', name: 'p_image',
+                    render: function(data){
+                        return "<img width='50' height='60' src={{url('/')}}/" + data +   " class='img-thumnail'>"
+                    }
              },
              {data: 'p_garage', name: 'p_garage'},
              {data: 'p_route', name: 'p_route'},
-             {data: 'p_image', name: 'p_image',
-                    render: function(data){
-                        return "<img width='50' height='60' src='{{url('/')}}/'" + data +   " class='img-thumnail'>"
-                    }
-             },
-             {data: 'buy_date', name: 'buy_date'},
-             {data: 'expire_date', name: 'expire_date'},
-             {data: 'selling_price', name: 'selling_price'},
-             {data: 'buying_price', name: 'buying_price'},
+
              {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
@@ -149,40 +132,33 @@
         }
 
         //  Update
-        if($('#cussave_btn').html() == 'Update'){
-            $('#cussave_btn').html('Sending..');
-            var id = $('#cus_id').val();
+        if($('#save_btn').html() == 'Update'){
+            $('#save_btn').html('Sending..');
+            var id = $('#p_id').val();
             // alert(id);
             var formData = new FormData(this);
             $.ajax({
                 data: formData,
-                url: "{{ url('/employee_update') }}"+ '/'+ id ,
+                url: "{{ url('/product_update') }}"+ '/'+ id ,
                 type: "POST",
                 cache:false,
                 contentType: false,
                 processData: false,
                 success: function(data){
 
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                        });
+                    if(data.success){
+                        toastr.success(data.success);
+                        $('#prd_form').trigger("reset");
+                        $('#prd_modal').modal('hide');
+                        table.draw();
+                    }
+                    else{
+                        toastr.error(data.error);
+                        $('#prd_form').trigger("reset");
+                        $('#prd_modal').modal('hide');
+                        table.draw();
+                      }
 
-                        Toast.fire({
-                        icon: 'success',
-                        title: 'Success'
-                        });
-                    $('#cus_form').trigger("reset");
-                    $('#cus_modal').modal('hide');
-                    // $('#view_img').attr('src', ' ');
-                    table.draw();
                 },
 
             });
@@ -215,39 +191,34 @@
             reader.readAsDataURL(this.files[0]);
         });
         // Edit
-        $('body').on('click', '.editCus', function(){
+        $('body').on('click', '.editProduct', function(){
             var id = $(this).data('id');
             $.ajax({
-                url:"{{url('/customer')}}"+ '/' + id+ "/edit",
+                url:"{{url('/product')}}"+ '/' + id+ "/edit",
                 success: function(data){
-                    $('#cus_modal').modal('show');
-                    $('#cus_modal_title').text('Edit Employee');
-                    $('#cus_id').val(data.id);
-                    // $('#p_description').innerHtml(data.details);
-                    $('#cus_name').val(data.name);
-                    $('#cus_email').val(data.email);
-                    $('#cus_phone').val(data.phone);
-                    $('#cus_address').val(data.address);
-                    $('#shop_name').val(data.shop_name);
-                    $('#acc_holder').val(data.account_holder);
-                    $('#acc_number').val(data.account_number);
-                    $('#bank_name').val(data.bank_name);
-                    $('#bank_brunch').val(data.bank_brunch);
-                    $('#cus_city').val(data.city);
-                    $('#cus_photo_holder').attr('src', "{{url('/')}}/"+data.photo).css({
+                     $('#prd_modal').modal('show');
+                     $('#prd_modal_title').html('Update Product');
+                     $('#p_id').val(data.id);
+                     $('#prd_name').val(data.p_name);
+                     $('#p_code').val(data.p_code);
+                     $('#p_garage').val(data.p_garage);
+                     $('#p_route').val(data.p_route);
+                    $('#p_img_holder').attr('src', "{{url('/')}}/"+data.p_image).css({
                         'height': '40',
-                        'widht': '50',
+                        'widht': '70',
                     });
-                    $('#cussave_btn').html('Update');
+                    $('#selling_price').val(data.selling_price);
+                    $('#buying_price').val(data.buying_price);
+                    $('#save_btn').html('Update');
                 }
             });
         });
 
         // Delete
-        $('body').on('click', '.deleteCus', function(){
+        $('body').on('click', '.deleteProduct', function(){
             var id = $(this).data('id');
            $.ajax({
-              url: "{{url('/customer')}}"+"/"+ id,
+              url: "{{url('/product')}}"+"/"+ id,
               type: "DELETE",
               success: function(data){
                 table.draw();
@@ -256,21 +227,27 @@
         });
 
         // View
-        $('body').on('click', '.viewCus', function(){
+        $('body').on('click', '.viewProduct', function(){
            var id = $(this).data('id');
            $.ajax({
-               url: "{{url('/customer')}}/"+ id,
+               url: "{{url('/product')}}/"+ id,
                type: "GET",
                success: function(data){
-                   $('#show_cus_modal').modal('show');
+                   $('#show_product_modal').modal('show');
                    $('#exampleModalLabel').html(data.name+"'s Details");
-                   $('#show_name').html(data.name);
-                   $('#show_email').html(data.email);
-                   $('#show_phone').html(data.phone);
-                   $('#show_address').html(data.address);
-                   $('#show_img').attr('src', "{{url('/')}}/"+data.photo).css({
+                   $('#show_name').html(data.p_name);
+                   $('#s_price').html(data.selling_price);
+                   $('#b_price').html(data.buying_price);
+                   $('#p_cat').html(data.cat_name);
+                   $('#sup').html(data.sup_name);
+                   $('#buydate').html(data.buy_date);
+                   $('#exDate').html(data.expire_date);
+                   $('#godaun').html(data.p_garage);
+                   $('#route').html(data.p_route);
+
+                   $('#show_img').attr('src', "{{url('/')}}/"+data.p_image).css({
                        'height': '70',
-                       'widht': '80',
+                       'widht': '100',
                        'margin-left': '40'
                    });
                }

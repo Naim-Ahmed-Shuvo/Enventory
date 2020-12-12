@@ -22,23 +22,30 @@
                                        $categories = DB::table('categories')->get();
                                  ?>
                                 <label for="exampleInputEmail1">Catgory</label>
-                                <select name="cat_id" class="form-control" id="">
-                                    @foreach ($categories as $item)
-                                      <option value="{{$item->id}}">{{$item->cat_name}}</option>
+                                <select name="category_id" class="form-control" id="">
+                                    @foreach ($categories as $cat)
+                                      <option value="{{$cat->id}}">{{$cat->cat_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Sup Id</label>
-                                <input type="text" class="form-control" name="sup_id" id="sup_id" aria-describedby="emailHelp" placeholder="Enter phone">
+                                <label for="exampleInputEmail1">Supplier</label>
+                                @php
+                                    $suppliers = DB::table('suppliers')->get();
+                                @endphp
+                                  <select name="sup_id" class="form-control" id="">
+                                    @foreach ($suppliers as $item)
+                                      <option value="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Product Code</label>
-                                <input type="text" class="form-control" name="p_code" id="p_code" aria-describedby="emailHelp" placeholder="Enter address">
+                                <input type="text" class="form-control" name="p_code" id="p_code" aria-describedby="emailHelp" placeholder="Enter Product code">
                             </div>
                         </div>
                         <div class="col-lg-4">
@@ -93,11 +100,11 @@
 </div><!-- /.modal -->
 <!-- Modal -->
 
-<div class="modal fade" id="show_em_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="show_product_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          {{-- <h5 class="modal-title" id="">Modal title</ --}}
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -114,20 +121,40 @@
                     <label for="">Name</label>
                     <span><h6 id="show_name"></h6></span>
                 </div>
+                <div class="col-lg-2">
+                    <label for="">Selling Price</label>
+                    <span><h6 id="s_price"></h6></span>
+                </div>
+                <div class="col-lg-2">
+                    <label for="">Buying Price</label>
+                    <span><h6 id="b_price"></h6></span>
+                </div>
                 <div class="col-lg-5">
-                    <label for="">Email</label>
-                    <span><h6 id="show_email"></h6></span>
+                    <label for="">Category</label>
+                    <span><h6 id="p_cat"></h6></span>
                 </div>
                 <div class="col-lg-4">
 
                 </div>
                 <div class="col-lg-4">
-                    <label for="">Phone</label>
-                    <span><h6 id="show_phone"></h6></span>
+                    <label for="">Supplier</label>
+                    <span><h6 id="sup"></h6></span>
                 </div>
                 <div class="col-lg-4">
-                    <label for="">Address</label>
-                    <span><h6 id="show_address"></h6></span>
+                    <label for="">Buy Date</label>
+                    <span><h6 id="buydate"></h6></span>
+                </div>
+                <div class="col-lg-4">
+                    <label for="">Expired Date</label>
+                    <span><h6 id="exDate"></h6></span>
+                </div>
+                <div class="col-lg-4">
+                    <label for="">Godaun</label>
+                    <span><h6 id="godaun"></h6></span>
+                </div>
+                <div class="col-lg-4">
+                    <label for="">Route</label>
+                    <span><h6 id="route"></h6></span>
                 </div>
             </div>
 

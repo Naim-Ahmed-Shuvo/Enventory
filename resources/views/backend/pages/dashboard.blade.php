@@ -1,5 +1,8 @@
 @extends('backend.master')
 
+@section('title', 'Dashboard')
+
+
 @section('content')
      <!-- start page title -->
      <div class="row">
