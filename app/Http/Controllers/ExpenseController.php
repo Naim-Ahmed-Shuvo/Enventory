@@ -146,4 +146,11 @@ class ExpenseController extends Controller
         $todayExpense = Expense::where('date',$today )->get();
         return response()->json($todayExpense);
     }
+
+    public function this_month_expense()
+    {
+        $month = date('F');
+        $this_month = Expense::where('month', $month)->get();
+        return response()->json($this_month);
+    }
 }

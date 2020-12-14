@@ -33,7 +33,7 @@
                     <div class="buttons">
                         <button class="btn btn-primary btn-sm" id="add_expense">Add Expense</button>
                         <button class="btn btn-info btn-sm" id="current_expense">Today</button>
-                        <button class="btn btn-success btn-sm" id="current_expense">This Month</button>
+                        <button class="btn btn-success btn-sm" id="ThisMonthExpense">This Month</button>
                     </div>
                 </div>
                 <span id="notifaction"></span>
@@ -242,7 +242,18 @@
               }
 
           });
-        })
+        });
+
+        // This month expense
+        $('#ThisMonthExpense').click(function(){
+           $.get('this_month_expense', function(data){
+               $('#CurrentMonthModal').modal('show');
+               for(var i=0;  i < data.length; i++){
+                var tr = '<tr> <td>'+data[i].amount+'</td> <td>'+data[i].details+'</td> <td>'+data[i].month+'</td> <td>'+data[i].year+'</td></tr>';
+                $('#TodayExpenseTable tbody').append(tr);
+              }
+           });
+        });
     });
  </script>
 @endpush

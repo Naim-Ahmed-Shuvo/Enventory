@@ -330,7 +330,12 @@
                                     </a>
                                 </li>
 
-
+                                <li>
+                                    <a href="{{url('/attendence')}}" class="waves-effect">
+                                        <i class=" mdi mdi-calendar"></i>
+                                        <span> Attendence</span>
+                                    </a>
+                                </li>
                             </ul>
 
                         </div>
@@ -468,9 +473,22 @@
         {{-- Toastr  ./ --}}
 
         @stack('js')
+        @if (Session::has('success'))
+        <script>
+            toastr.success("{!!Session::get('success')!!}")
+        </script>
+
+        @endif
+        @if (Session::has('warning'))
+        <script>
+            toastr.warning("{!!Session::get('warning')!!}")
+        </script>
+        @endif
 
     </body>
 
 
 <!-- Mirrored from coderthemes.com/moltran/layouts/blue-vertical/ui-modals.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 24 Nov 2020 14:13:55 GMT -->
+
+
 </html>

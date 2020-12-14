@@ -27,7 +27,11 @@
             <div class="card-header">
                 <div class="header-content d-flex justify-content-between">
                     <h3 class="card-title">Product Table</h3>
-                    <button class="btn btn-primary btn-sm" id="add_prd"><i class="fa fa-user-plus"></i></button>
+                    <div class="button_group">
+                        <a href="{{url('/products/export/')}}" class="btn btn-sm btn-info">Download Xlsx</a>
+                        <a id="ImportProduct" class="btn btn-sm btn-info">Import Xlsx</a>
+                        <button class="btn btn-primary btn-sm" id="add_prd">Add Product</button>
+                    </div>
 
                 </div>
                 <span id="notifaction"></span>
@@ -252,6 +256,26 @@
                    });
                }
            });
+        });
+
+        $('#ImportProduct').click(function(e){
+             e.preventDefault();
+             $('#ImportModal').modal('show');
+        });
+        $('#ImportProductForm').submit(function(e){
+             e.preventDefault();
+            var data = new FormData(this);
+            $.ajax({
+                 data: data,
+                 url: "{{url('import')}}",
+                 type: "POST",
+                 cache:false,
+                 contentType: false,
+                 processData: false,
+                 success: function(){
+                    $('#ImportModal').modal('hide');
+                 }
+            });
         });
     });
  </script>
